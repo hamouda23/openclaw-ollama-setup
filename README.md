@@ -77,10 +77,10 @@ openclaw tui
 ## 📚 Documentation
 
 - [Guide d'installation complet](docs/Installation.md)
-- [Configuration détaillée](docs/CONFIGURATION.md)
-- [Résolution de problèmes](docs/TROUBLESHOOTING.md)
-- [Référence des commandes](docs/COMMANDS.md)
-- [Scripts utiles](docs/SCRIPTS.md) ⭐ **Nouveau : script de changement de modèle**
+- [Configuration détaillée](docs/Configuration.md)
+- [Résolution de problèmes](docs/Troubleshooting.md)
+- [Référence des commandes](docs/Commands.md)
+- [Scripts utiles](docs/Scripts.md) ⭐ **Nouveau : script de changement de modèle**
 
 ## 🔧 Configuration
 
