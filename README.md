@@ -80,6 +80,7 @@ openclaw tui
 - [Configuration détaillée](docs/CONFIGURATION.md)
 - [Résolution de problèmes](docs/TROUBLESHOOTING.md)
 - [Référence des commandes](docs/COMMANDS.md)
+- [Scripts utiles](docs/SCRIPTS.md) ⭐ **Nouveau : script de changement de modèle**
 
 ## 🔧 Configuration
 
@@ -133,6 +134,28 @@ openclaw logs --follow
 # Diagnostic
 openclaw doctor
 ```
+
+### 🔄 Changer de modèle rapidement
+
+Utilisez le [script de basculement de modèle](docs/SCRIPTS.md#script-de-basculement-de-modèle) :
+
+```bash
+# Créer le script (voir docs/SCRIPTS.md pour le code complet)
+chmod +x ~/switch-model.sh
+
+# Changer de modèle en une commande
+~/switch-model.sh qwen3.5:cloud    # Conversation générale
+~/switch-model.sh deepseek-coder:6.7b  # Développement
+~/switch-model.sh mistral:latest   # Raisonnement
+~/switch-model.sh qwen2.5:7b       # Alternative
+```
+
+**Modèles disponibles sur ce système :**
+- `qwen3.5:cloud` - Conversation générale (par défaut)
+- `qwen2.5:7b` - Alternative performante
+- `deepseek-coder:6.7b` - Spécialisé code
+- `mistral:latest` - Raisonnement
+- `nomic-embed-text:latest` - Embeddings
 
 ## 🐛 Problèmes courants
 
