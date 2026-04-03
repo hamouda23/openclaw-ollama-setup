@@ -428,6 +428,163 @@ du -sh ~/.ollama/models/
 
 ---
 
+## Changer de modèle rapidement
+
+### Script de basculement de modèle
+
+Pour faciliter le changement de modèle OpenClaw, voici un script automatisé.
+
+#### Modèles disponibles
+
+```bash
+ollama list
+```
+
+Sortie exemple :
+```
+NAME                       ID              SIZE      MODIFIED
+qwen3.5:cloud              a7bf6f7891c3    -         30 hours ago
+qwen2.5:7b                 845dbda0ea48    4.7 GB    4 days ago
+nomic-embed-text:v1.5      0a109f422b47    274 MB    2 months ago
+nomic-embed-text:latest    0a109f422b47    274 MB    2 months ago
+deepseek-coder:6.7b        ce298d984115    3.8 GB    2 months ago
+mistral:latest             6577803aa9a0    4.4 GB    2 months ago
+```
+
+#### Créer le script de basculement
+
+```bash
+# Créer le script
+cat > ~/switch-model.sh << 'EOF'
+#!/bin/bash
+
+# Script de changement de modèle OpenClaw
+# Usage: ./switch-model.sh <nom-du-modele>
+
+if [ -z "$1" ]; then
+  echo "❌ Usage: switch-model.sh <nom-du-modele>"
+  echo ""
+  echo "Modèles disponibles :"
+  ollama list
+  echo ""
+  echo "Exemple: switch-model.sh qwen3.5:cloud"
+  exit 1
+fi
+
+MODEL=$1
+
+echo "🔄 Changement vers le modèle : $MODEL"
+
+# Vérifier que le modèle existe
+if ! ollama list | grep -q "^$MODEL "; then
+  echo "❌ Erreur: Le modèle '$MODEL' n'est pas installé"
+  echo ""
+  echo "Pour l'installer :"
+  echo "  ollama pull $MODEL"
+  exit 1
+fi
+
+# Backup de la config
+cp ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup
+echo "💾 Backup créé : ~/.openclaw/openclaw.json.backup"
+
+# Changer la config globale
+sed -i "s|\"primary\": \"ollama/.*\"|\"primary\": \"ollama/$MODEL\"|" ~/.openclaw/openclaw.json
+
+# Changer tous les "model" dans la config globale
+sed -i "s|\"model\": \"ollama/.*\"|\"model\": \"ollama/$MODEL\"|" ~/.openclaw/openclaw.json
+
+# Changer la config de l'agent
+if [ -f ~/.openclaw/agents/main/agent/models.json ]; then
+  sed -i "s|\"defaultModel\": \".*\"|\"defaultModel\": \"$MODEL\"|" ~/.openclaw/agents/main/agent/models.json
+fi
+
+# Redémarrer le gateway
+echo "🔄 Redémarrage du gateway..."
+openclaw gateway restart
+
+echo ""
+echo "✅ Modèle changé vers : ollama/$MODEL"
+echo "✅ Gateway redémarré"
+echo ""
+echo "Vérification :"
+grep "primary" ~/.openclaw/openclaw.json
+EOF
+
+# Rendre exécutable
+chmod +x ~/switch-model.sh
+
+echo "✅ Script créé : ~/switch-model.sh"
+```
+
+#### Utiliser le script
+
+```bash
+# Afficher l'aide
+~/switch-model.sh
+
+# Changer vers qwen3.5:cloud
+~/switch-model.sh qwen3.5:cloud
+
+# Changer vers mistral
+~/switch-model.sh mistral:latest
+
+# Changer vers deepseek pour le code
+~/switch-model.sh deepseek-coder:6.7b
+
+# Changer vers qwen2.5
+~/switch-model.sh qwen2.5:7b
+```
+
+#### Sortie exemple
+
+```
+🔄 Changement vers le modèle : qwen3.5:cloud
+💾 Backup créé : ~/.openclaw/openclaw.json.backup
+🔄 Redémarrage du gateway...
+
+✅ Modèle changé vers : ollama/qwen3.5:cloud
+✅ Gateway redémarré
+
+Vérification :
+  "primary": "ollama/qwen3.5:cloud",
+```
+
+#### Restaurer la config précédente
+
+```bash
+# Si le changement pose problème
+cp ~/.openclaw/openclaw.json.backup ~/.openclaw/openclaw.json
+openclaw gateway restart
+```
+
+#### Alias pratiques
+
+Ajouter dans `~/.bashrc` :
+
+```bash
+# Alias pour changer de modèle
+alias switch-qwen='~/switch-model.sh qwen3.5:cloud'
+alias switch-mistral='~/switch-model.sh mistral:latest'
+alias switch-deepseek='~/switch-model.sh deepseek-coder:6.7b'
+alias switch-qwen25='~/switch-model.sh qwen2.5:7b'
+
+# Alias pour voir le modèle actuel
+alias current-model='grep "primary" ~/.openclaw/openclaw.json'
+```
+
+Puis :
+```bash
+source ~/.bashrc
+
+# Utilisation
+switch-qwen
+switch-mistral
+current-model
+```
+
+---
+
 ## Scripts utiles
 
 ### Script de vérification complète
