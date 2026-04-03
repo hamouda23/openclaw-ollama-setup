@@ -77,6 +77,7 @@ openclaw tui
 ## 📚 Documentation
 
 - [Guide d'installation complet](docs/Installation.md)
+- - [Structure d'OpenClaw](docs/STRUCTURE.md) ⭐ **: arborescence complète**
 - [Configuration détaillée](docs/Configuration.md)
 - [Résolution de problèmes](docs/Troubleshooting.md)
 - [Référence des commandes](docs/Commands.md)
