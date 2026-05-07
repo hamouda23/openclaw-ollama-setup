@@ -2,8 +2,8 @@
 
 > Framework d'agents IA autonomes avec interface Telegram et modèles locaux
 
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-2026.4.1-blue)](https://github.com/openclaw/openclaw)
-[![Ollama](https://img.shields.io/badge/Ollama-0.15.2-green)](https://ollama.com)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-2026.5.6-blue)](https://github.com/openclaw/openclaw)
+[![Ollama](https://img.shields.io/badge/Ollama-0.17+-green)](https://ollama.com)
 [![Status](https://img.shields.io/badge/Status-Operational-success)](https://github.com)
 
 ## 📋 Vue d'ensemble
@@ -12,7 +12,7 @@ Ce projet documente la configuration complète d'**OpenClaw**, un framework open
 
 ### ✨ Fonctionnalités
 
-- 🤖 Agent IA autonome avec le modèle `qwen3.5:cloud`
+- 🤖 Agent IA autonome avec le modèle `gemma4`
 - 💬 Interface Telegram via bot personnalisé
 - 🖥️ Interface TUI (Terminal User Interface)
 - 🔒 Exécution 100% locale avec Ollama
@@ -61,17 +61,9 @@ npm install -g openclaw
 ### Configuration rapide
 
 ```bash
-# 1. Télécharger le modèle
-ollama pull qwen3.5:cloud
-
-# 2. Configurer OpenClaw
-sed -i 's|"primary": "modelstudio/qwen3.5-plus"|"primary": "ollama/qwen3.5:cloud"|' ~/.openclaw/openclaw.json
-
-# 3. Démarrer le gateway
-openclaw gateway restart
-
-# 4. Lancer l'interface
-openclaw tui
+openclaw onboard --non-interactive \
+  --auth-choice ollama \
+  --accept-risk
 ```
 
 ## 📚 Documentation
@@ -97,8 +89,8 @@ openclaw tui
 
 ```json
 {
-  "primary": "ollama/qwen3.5:cloud",
-  "defaultModel": "qwen3.5:cloud"
+  "primary": "ollama/gemma4",
+  "defaultModel": "gemma4"
 }
 ```
 
@@ -160,29 +152,44 @@ chmod +x ~/switch-model.sh
 
 ## 🐛 Problèmes courants
 
-### Erreur 403: Access denied
+### Missing gateway auth token
 
 ```bash
-# Changer le provider de ModelStudio vers Ollama
-sed -i 's|"primary": "modelstudio/.*"|"primary": "ollama/qwen3.5:cloud"|' ~/.openclaw/openclaw.json
-openclaw gateway restart
+openclaw onboard --non-interactive \
+  --auth-choice ollama \
+  --accept-risk
 ```
 
-### No API key found
+### Missing gateway.mode
 
-Voir le [guide de troubleshooting](docs/TROUBLESHOOTING.md#erreur-4--no-api-key-found-for-provider-ollama) complet.
+```bash
+openclaw onboard --non-interactive \
+  --auth-choice ollama \
+  --accept-risk
+```
+
+### Procédure de réinstallation complète
+
+```bash
+npm uninstall -g openclaw
+rm -rf ~/.openclaw
+npm install -g openclaw
+openclaw onboard --non-interactive \
+  --auth-choice ollama \
+  --accept-risk
+```
 
 ## 📦 Versions
 
-- **OpenClaw** : 2026.4.1 (da64a97)
-- **Ollama** : 0.15.2
+- **OpenClaw** : 2026.5.6 (c97b9f7)
+- **Ollama** : 0.17+
 - **Node.js** : Compatible avec versions récentes
-- **Modèle principal** : qwen3.5:cloud
+- **Modèle principal** : gemma4
 
 ## 🔗 Liens utiles
 
 - [OpenClaw GitHub](https://github.com/openclaw/openclaw)
-- [Documentation OpenClaw](https://docs.openclaw.dev)
+- [Documentation OpenClaw](https://docs.openclaw.ai)
 - [Ollama Official](https://ollama.com)
 - [Qwen Models](https://ollama.com/library/qwen)
 - [Telegram Bot API](https://core.telegram.org/bots/api)
